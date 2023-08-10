@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>{{ title|title }}</h1>
+<strong>{{ instance.full_name|title }} <small>Status: {{ instance.is_active }}</small></strong>
+<form action="{% url 'assets:employee_view_active_status_update' instance.employee_id %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" role="switch" id="flexSwitchCheckChecked" {% if instance.is_active %}value="Active" class="btn btn-outline-primary btn-sm"{% else %}value="Inactive" class="btn btn-outline-secondary btn-sm"{% endif %}>
+</form>
+
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Update">
+</form>
+
+
+{% endblock %}

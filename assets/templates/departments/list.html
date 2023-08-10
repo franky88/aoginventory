@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Add Category</strong>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <input class="btn btn-outline-primary btn-sm" type="submit" value="Add">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Category list</strong>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dep in departments %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ dep|upper }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-outline-success btn-sm" href="{% url 'assets:department_view_details' dep.pk %}">Edit</a>
+                                    <form action="{% url 'assets:department_view_delete' dep.pk %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" class="btn btn-outline-danger btn-sm" value="Delete">
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

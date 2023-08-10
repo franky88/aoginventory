@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Add Employee</strong>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <input class="btn btn-outline-primary btn-sm" type="submit" value="Add">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Employee list</strong>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in employees %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ employee.full_name|upper }}</td>
+                            <td>{{ employee.department.name|title }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-outline-success btn-sm" href="{% url 'assets:employee_view_details' employee.employee_id %}">Edit</a>
+                                    <form action="{% url 'assets:employee_view_active_status_update' employee.employee_id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" role="switch" id="flexSwitchCheckChecked" {% if employee.is_active %}class="btn btn-outline-primary btn-sm"{% else %}class="btn btn-outline-secondary btn-sm"{% endif %}>{% if employee.is_active %}<i class="fa-solid fa-eye"></i>{% else %}<i class="fa-solid fa-eye-slash"></i>{% endif %}</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
